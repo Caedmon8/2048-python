@@ -1,4 +1,5 @@
-from tkinter import Frame, Label, CENTER
+from logging import root
+from tkinter import Frame, Label, CENTER, Text, Tk, END, dialog, Toplevel
 import random
 import logic
 import constants as c
@@ -12,6 +13,8 @@ class GameGrid(Frame):
 
         self.grid()
         self.master.title('2048')
+        self.master.overrideredirect(True)
+        self.master.bind("<Escape>", logic.windower())
         self.master.bind("<Key>", self.key_down)
 
         self.commands = {
@@ -30,16 +33,20 @@ class GameGrid(Frame):
         }
 
         self.grid_cells = []
+
         self.init_grid()
         self.matrix = logic.new_game(c.GRID_LEN)
         self.history_matrixs = []
         self.update_grid_cells()
 
+
         self.mainloop()
 
     def init_grid(self):
-        background = Frame(self, bg=c.BACKGROUND_COLOR_GAME,width=c.SIZE, height=c.SIZE)
+        background = Frame(self, bg=c.BACKGROUND_COLOR_GAME,width=c.WIDTH, height=c.HEIGHT)
         background.grid()
+
+        cell = Frame(background, bg=c.BACKGROUND_COLOR_CELL_EMPTY, width=100, height=100)
 
         for i in range(c.GRID_LEN):
             grid_row = []
@@ -47,8 +54,8 @@ class GameGrid(Frame):
                 cell = Frame(
                     background,
                     bg=c.BACKGROUND_COLOR_CELL_EMPTY,
-                    width=c.SIZE / c.GRID_LEN,
-                    height=c.SIZE / c.GRID_LEN
+                    width=c.WIDTH / c.GRID_LEN,
+                    height=c.HEIGHT / c.GRID_LEN
                 )
                 cell.grid(
                     row=i,
@@ -68,6 +75,7 @@ class GameGrid(Frame):
                 grid_row.append(t)
             self.grid_cells.append(grid_row)
 
+
     def update_grid_cells(self):
         for i in range(c.GRID_LEN):
             for j in range(c.GRID_LEN):
@@ -81,6 +89,7 @@ class GameGrid(Frame):
                         fg=c.CELL_COLOR_DICT[new_number]
                     )
         self.update_idletasks()
+        print("Points: ", c.POINTS)
 
     def key_down(self, event):
         key = event.keysym

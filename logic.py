@@ -8,6 +8,7 @@
 
 import random
 import constants as c
+from tkinter import Frame, Label, CENTER, Text, Tk, END
 
 #######
 # Task 1a #
@@ -156,6 +157,8 @@ def merge(mat, done):
                 mat[i][j] *= 2
                 mat[i][j+1] = 0
                 done = True
+                c.POINTS += mat[i][j]
+                
     return mat, done
 
 def up(game):
@@ -176,7 +179,17 @@ def down(game):
     game, done = merge(game, done)
     game = cover_up(game)[0]
     game = transpose(reverse(game))
+    windower()
     return game, done
+
+def windower():
+    for i in range(c.POINTS):
+        root = Tk()
+        root.geometry("250x170")
+
+        txt = Text(root, height=5, width=30)
+        txt.insert(END, f"Points: {c.POINTS}\nTrick or Treat!!!")
+        txt.pack(pady=20)
 
 def left(game):
     print("left")
